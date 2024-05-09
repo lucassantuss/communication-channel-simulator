@@ -1,10 +1,46 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Simulador de Canal de Comunicação</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div>TODO write content</div>
+        <header class="bg-dark text-light py-4">
+            <div class="container">
+                <h1 class="text-center">Simulador de Canal de Comunicação</h1>
+            </div>
+        </header>
+        <main class="container mt-4">
+            <form action="escolher_tipo_sinal.html">
+                <div class="form-group">
+                    <label for="tipo_sinal">Escolha o tipo de sinal:</label>
+                    <select class="form-control" name="tipo_sinal" id="tipo_sinal">
+                        <option value="quadrada">Onda Quadrada</option>
+                        <option value="triangular">Onda Triangular</option>
+                        <option value="dente_serra">Onda Dente-de-Serra</option>
+                        <option value="senoidal_retificada">Onda Senoidal Retificada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="frequencia">Digite a frequência fundamental (1 kHz - 100 kHz):</label>
+                    <input type="number" class="form-control" id="frequencia" name="frequencia" min="1000" max="100000" step="1000">
+                </div>
+                <button type="submit" class="btn btn-primary">Avançar</button>
+            </form>
+        </main>
+        <footer class="bg-dark text-light py-3 mt-5">
+            <div class="container text-center">
+                <p>Desenvolvido por:</p>
+                <p>Danilo Rodrigues Dantas</p>
+                <p>Lucas Araujo dos Santos</p>
+                <p>Maik Soares Luiz</p>
+                <p>Renan César de Araujo</p>
+            </div>
+        </footer>
     </body>
 </html>

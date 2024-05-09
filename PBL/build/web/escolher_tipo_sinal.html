@@ -16,19 +16,17 @@
             </div>
         </header>
         <main class="container mt-4">
-            <form action="escolher_tipo_sinal.html">
+            <form action="resultados_simulacao.html">
                 <div class="form-group">
-                    <label for="tipo_sinal">Escolha o tipo de sinal:</label>
-                    <select class="form-control" name="tipo_sinal" id="tipo_sinal">
-                        <option value="quadrada">Onda Quadrada</option>
-                        <option value="triangular">Onda Triangular</option>
-                        <option value="dente_serra">Onda Dente-de-Serra</option>
-                        <option value="senoidal_retificada">Onda Senoidal Retificada</option>
+                    <label for="tipo_canal">Escolha o tipo de canal:</label>
+                    <select class="form-control" name="tipo_canal" id="tipo_canal">
+                        <option value="passa_baixas">Canal Passa-Baixas</option>
+                        <option value="passa_faixas">Canal Passa-Faixas</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="frequencia">Digite a frequência fundamental (1 kHz - 100 kHz):</label>
-                    <input type="number" class="form-control" id="frequencia" name="frequencia" min="1000" max="100000" step="1000">
+                    <label for="frequencia_corte">Digite a frequência de corte (1 kHz - 100 kHz):</label>
+                    <input type="number" class="form-control" id="frequencia_corte" name="frequencia_corte" min="1000" max="100000" step="1000">
                 </div>
                 <button type="submit" class="btn btn-primary">Avançar</button>
             </form>
