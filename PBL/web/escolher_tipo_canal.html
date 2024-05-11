@@ -1,44 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simulador de Canal de Comunicação</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        <header class="bg-dark text-light py-4">
-            <div class="container">
-                <h1 class="text-center">Simulador de Canal de Comunicação</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Canal de Comunicação</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header class="bg-dark text-light py-4">
+        <div class="container">
+            <h1 class="text-center">Simulador de Canal de Comunicação</h1>
+        </div>
+    </header>
+    <main class="container mt-4">
+        <form action="resultados_simulacao.html">
+            <div class="form-group">
+                <label for="tipo_canal">Escolha o tipo de canal:</label>
+                <select class="form-control" name="tipo_canal" id="tipo_canal">
+                    <option value="">Selecione...</option>
+                    <option value="passa_baixas">Canal Passa-Baixas</option>
+                    <option value="passa_faixas">Canal Passa-Faixas</option>
+                </select>
             </div>
-        </header>
-        <main class="container mt-4">
-            <form action="resultados_simulacao.html">
+            <div id="passa_baixas_content" style="display: none;">
                 <div class="form-group">
-                    <label for="tipo_canal">Escolha o tipo de canal:</label>
-                    <select class="form-control" name="tipo_canal" id="tipo_canal">
-                        <option value="passa_baixas">Canal Passa-Baixas</option>
-                        <option value="passa_faixas">Canal Passa-Faixas</option>
-                    </select>
+                    <label for="frequencia_corte0">Digite a frequência de corte (1 kHz - 100 kHz):</label>
+                    <input type="number" class="form-control" id="freq_Corte_pBaixas" name="frequencia_corte0" min="1000" max="100000" step="1000">
                 </div>
-                <div class="form-group">
-                    <label for="frequencia_corte">Digite a frequência de corte (1 kHz - 100 kHz):</label>
-                    <input type="number" class="form-control" id="frequencia_corte" name="frequencia_corte" min="1000" max="100000" step="1000">
-                </div>
-                <button type="submit" class="btn btn-primary">Avançar</button>
-            </form>
-        </main>
-        <footer class="bg-dark text-light py-3 mt-5">
-            <div class="container text-center">
-                <p>Desenvolvido por:</p>
-                <p>Danilo Rodrigues Dantas</p>
-                <p>Lucas Araujo dos Santos</p>
-                <p>Maik Soares Luiz</p>
-                <p>Renan César de Araujo</p>
             </div>
-        </footer>
-    </body>
+            <div id="passa_faixas_content" style="display: none;">
+                <div class="form-group">
+                    <label for="frequencia_corte1">Digite a primeira frequência de corte inferior (1 kHz - 100 kHz):</label>
+                    <input type="number" class="form-control" id="freq_Corte_pFaixas0" name="frequencia_corte1" min="1000" max="100000" step="1000">
+                    <label for="frequencia_corte2">Digite a segunda frequência de corte superior (1 kHz - 100 kHz):</label>
+                    <input type="number" class="form-control" id="freq_Corte_pFaixas1" name="frequencia_corte2" min="1000" max="100000" step="1000">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Avançar</button>
+        </form>
+    </main>
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container text-center">
+            <p>Desenvolvido por:</p>
+            <p>Danilo Rodrigues Dantas</p>
+            <p>Lucas Araujo dos Santos</p>
+            <p>Maik Soares Luiz</p>
+            <p>Renan Cesar de Araujo</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('tipo_canal').addEventListener('change', function () {
+            var selectedOption = this.value;
+
+            // Oculta todos os campos adicionais
+            document.getElementById('passa_baixas_content').style.display = 'none';
+            document.getElementById('passa_faixas_content').style.display = 'none';
+
+            // Mostra os campos adicionais correspondentes à opção selecionada
+            if (selectedOption === 'passa_baixas') {
+                document.getElementById('passa_baixas_content').style.display = 'block';
+            } else if (selectedOption === 'passa_faixas') {
+                document.getElementById('passa_faixas_content').style.display = 'block';
+            }
+        });
+    </script>
+</body>
 </html>
