@@ -12,7 +12,10 @@
 <body>
     <header class="bg-dark text-light py-4">
         <div class="container">
-            <h1 class="text-center">Simulador de Canal de Comunicação</h1>
+            <h1 class="text-center">Escolha o Tipo de Canal</h1>
+            <div class="text-right">
+                <a href="index.html" class="btn btn-secondary">Voltar à Página Inicial</a>
+            </div>
         </div>
     </header>
     <main class="container mt-4">
@@ -41,16 +44,27 @@
             </div>
             <button type="submit" class="btn btn-primary">Avançar</button>
         </form>
+        <br><br><br>
     </main>
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container text-center">
-            <p>Desenvolvido por:</p>
-            <p>Danilo Rodrigues Dantas</p>
-            <p>Lucas Araujo dos Santos</p>
-            <p>Maik Soares Luiz</p>
-            <p>Renan Cesar de Araujo</p>
-        </div>
-    </footer>
+        <footer class="bg-dark text-light py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-md-left text-center mb-3 mb-md-0">
+                        <h5>Sobre Nós</h5>
+                        <p>Alunos do EC7, responsáveis pela criação e implementação desse Simulador de Canal de Comunicação</p>
+                    </div>
+                    <div class="col-md-6 text-md-right text-center">
+                        <h5>Desenvolvedores</h5>
+                        <ul class="list-unstyled">
+                            <li>Danilo Rodrigues Dantas</li>
+                            <li>Lucas Araujo dos Santos</li>
+                            <li>Maik Soares Luiz</li>
+                            <li>Renan Cesar de Araujo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
 
     <script>
         document.getElementById('tipo_canal').addEventListener('change', function () {

@@ -14,19 +14,33 @@
         <header class="bg-dark text-light py-4">
             <div class="container">
                 <h1 class="text-center">Resultados da Simulação</h1>
+                <div class="text-right">
+                    <a href="index.html" class="btn btn-secondary">Voltar à Página Inicial</a>
+                </div>
             </div>
         </header>
         <main class="container mt-4">
             <canvas id="grafico"></canvas>
             <!-- TODO Implementar a exibição dos gráficos -->
+            <br><br><br>
         </main>
-        <footer class="bg-dark text-light py-3 mt-5">
-            <div class="container text-center">
-                <p>Desenvolvido por:</p>
-                <p>Danilo Rodrigues Dantas</p>
-                <p>Lucas Araujo dos Santos</p>
-                <p>Maik Soares Luiz</p>
-                <p>Renan Cesar de Araujo</p>
+        <footer class="bg-dark text-light py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-md-left text-center mb-3 mb-md-0">
+                        <h5>Sobre Nós</h5>
+                        <p>Alunos do EC7, responsáveis pela criação e implementação desse Simulador de Canal de Comunicação</p>
+                    </div>
+                    <div class="col-md-6 text-md-right text-center">
+                        <h5>Desenvolvedores</h5>
+                        <ul class="list-unstyled">
+                            <li>Danilo Rodrigues Dantas</li>
+                            <li>Lucas Araujo dos Santos</li>
+                            <li>Maik Soares Luiz</li>
+                            <li>Renan Cesar de Araujo</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </footer>
     </body>
@@ -34,31 +48,31 @@
 
 <script>
     // Dados do resultado da simulação (exemplo)
-var resultado = {
-    frequencias: [1000, 2000, 3000, 4000], // Exemplo de frequências
-    amplitudes: [0.5, 0.8, 0.3, 0.6], // Exemplo de amplitudes
-};
+    var resultado = {
+        frequencias: [1000, 2000, 3000, 4000], // Exemplo de frequências
+        amplitudes: [0.5, 0.8, 0.3, 0.6], // Exemplo de amplitudes
+    };
 
 // Configuração do gráfico
-var ctx = document.getElementById('grafico').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: resultado.frequencias,
-        datasets: [{
-            label: 'Amplitude',
-            data: resultado.amplitudes,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
+    var ctx = document.getElementById('grafico').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: resultado.frequencias,
+            datasets: [{
+                    label: 'Amplitude',
+                    data: resultado.amplitudes,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         }
-    }
-});
+    });
 </script>
