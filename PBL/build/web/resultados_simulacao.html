@@ -8,6 +8,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     </head>
     <body>
         <header class="bg-dark text-light py-4">
@@ -16,6 +17,7 @@
             </div>
         </header>
         <main class="container mt-4">
+            <canvas id="grafico"></canvas>
             <!-- TODO Implementar a exibição dos gráficos -->
         </main>
         <footer class="bg-dark text-light py-3 mt-5">
@@ -29,3 +31,34 @@
         </footer>
     </body>
 </html>
+
+<script>
+    // Dados do resultado da simulação (exemplo)
+var resultado = {
+    frequencias: [1000, 2000, 3000, 4000], // Exemplo de frequências
+    amplitudes: [0.5, 0.8, 0.3, 0.6], // Exemplo de amplitudes
+};
+
+// Configuração do gráfico
+var ctx = document.getElementById('grafico').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: resultado.frequencias,
+        datasets: [{
+            label: 'Amplitude',
+            data: resultado.amplitudes,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
