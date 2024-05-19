@@ -16,7 +16,7 @@
             </div>
         </header>
         <main class="container mt-4">
-            <form action="escolher_tipo_canal.html">
+            <form action="resultado2.jsp">
                 <div class="form-group">
                     <label for="tipo_sinal">Escolha o tipo de sinal:</label>
                     <select class="form-control" name="tipo_sinal" id="tipo_sinal">
@@ -29,6 +29,28 @@
                 <div class="form-group">
                     <label for="frequencia">Digite a frequência fundamental (1 kHz - 100 kHz):</label>
                     <input type="number" class="form-control" id="frequencia" name="frequencia" min="1" max="100" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="tipo_canal">Escolha o tipo de canal:</label>
+                    <select class="form-control" name="tipo_canal" id="tipo_canal">
+                        <option value="">Selecione...</option>
+                        <option value="passa_baixas">Canal Passa-Baixas</option>
+                        <option value="passa_faixas">Canal Passa-Faixas</option>
+                    </select>
+                </div>
+                <div id="passa_baixas_content" style="display: none;">
+                    <div class="form-group">
+                        <label for="frequencia_corte0">Digite a frequência de corte (1 kHz - 100 kHz):</label>
+                        <input type="number" class="form-control" id="freq_Corte_pBaixas" name="frequencia_corte0" min="1" max="100" step="1">
+                    </div>
+                </div>
+                <div id="passa_faixas_content" style="display: none;">
+                    <div class="form-group">
+                        <label for="frequencia_corte1">Digite a primeira frequência de corte inferior (1 kHz - 100 kHz):</label>
+                        <input type="number" class="form-control" id="freq_Corte_pFaixas0" name="frequencia_corte1" min="1" max="100" step="1">
+                        <label for="frequencia_corte2">Digite a segunda frequência de corte superior (1 kHz - 100 kHz):</label>
+                        <input type="number" class="form-control" id="freq_Corte_pFaixas1" name="frequencia_corte2" min="1" max="100" step="1">
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Avançar</button>
             </form>
@@ -53,5 +75,22 @@
                 </div>
             </div>
         </footer>
+
+        <script>
+            document.getElementById('tipo_canal').addEventListener('change', function () {
+                var selectedOption = this.value;
+
+                // Oculta todos os campos adicionais
+                document.getElementById('passa_baixas_content').style.display = 'none';
+                document.getElementById('passa_faixas_content').style.display = 'none';
+
+                // Mostra os campos adicionais correspondentes à opção selecionada
+                if (selectedOption === 'passa_baixas') {
+                    document.getElementById('passa_baixas_content').style.display = 'block';
+                } else if (selectedOption === 'passa_faixas') {
+                    document.getElementById('passa_faixas_content').style.display = 'block';
+                }
+            });
+        </script>
     </body>
 </html>
