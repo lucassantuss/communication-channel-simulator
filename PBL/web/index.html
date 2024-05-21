@@ -16,7 +16,7 @@
             </div>
         </header>
         <main class="container mt-4">
-            <form action="resultado2.jsp">
+            <form id="sinalForm" action="resultado_onda_quadrada.jsp">
                 <div class="form-group">
                     <label for="tipo_sinal">Escolha o tipo de sinal:</label>
                     <select class="form-control" name="tipo_sinal" id="tipo_sinal">
@@ -77,19 +77,34 @@
         </footer>
 
         <script>
-            document.getElementById('tipo_canal').addEventListener('change', function () {
-                var selectedOption = this.value;
+            $(document).ready(function () {
+                $('#tipo_canal').on('change', function () {
+                    var selectedOption = this.value;
 
-                // Oculta todos os campos adicionais
-                document.getElementById('passa_baixas_content').style.display = 'none';
-                document.getElementById('passa_faixas_content').style.display = 'none';
+                    $('#passa_baixas_content').hide();
+                    $('#passa_faixas_content').hide();
 
-                // Mostra os campos adicionais correspondentes à opção selecionada
-                if (selectedOption === 'passa_baixas') {
-                    document.getElementById('passa_baixas_content').style.display = 'block';
-                } else if (selectedOption === 'passa_faixas') {
-                    document.getElementById('passa_faixas_content').style.display = 'block';
-                }
+                    if (selectedOption === 'passa_baixas') {
+                        $('#passa_baixas_content').show();
+                    } else if (selectedOption === 'passa_faixas') {
+                        $('#passa_faixas_content').show();
+                    }
+                });
+
+                $('#tipo_sinal').on('change', function () {
+                    var selectedOption = $(this).val();
+
+                    var formAction = 'resultado_onda_quadrada.jsp';
+                    if (selectedOption === 'triangular') {
+                        formAction = 'resultado_onda_triangular.jsp';
+                    } else if (selectedOption === 'dente_serra') {
+                        formAction = 'resultado_onda_dente_de_serra.jsp';
+                    } else if (selectedOption === 'senoidal_retificada') {
+                        formAction = 'resultado_onda_senoidal_retificada.jsp';
+                    }
+
+                    $('#sinalForm').attr('action', formAction);
+                });
             });
         </script>
     </body>

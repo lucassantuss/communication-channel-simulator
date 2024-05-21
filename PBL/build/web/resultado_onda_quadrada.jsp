@@ -9,7 +9,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
@@ -22,27 +21,26 @@
             </div>
         </header>
         <main class="container mt-4">
-            <canvas id="grafico"></canvas>
-                <%
-                    String tipoSinal = request.getParameter("tipo_sinal");
-                    Integer frequencia = null;
-                    if (request.getParameter("frequencia") != null && !request.getParameter("frequencia").isEmpty()) {
-                        frequencia = Integer.parseInt(request.getParameter("frequencia"));
-                    }
-                    String tipoCanal = request.getParameter("tipo_canal");
-                    Integer frequenciaCorte0 = null;
-                    Integer frequenciaCorte1 = null;
-                    Integer frequenciaCorte2 = null;
-                    if (request.getParameter("frequencia_corte0") != null && !request.getParameter("frequencia_corte0").isEmpty()) {
-                        frequenciaCorte0 = Integer.parseInt(request.getParameter("frequencia_corte0"));
-                    }
-                    if (request.getParameter("frequencia_corte1") != null && !request.getParameter("frequencia_corte1").isEmpty()) {
-                        frequenciaCorte1 = Integer.parseInt(request.getParameter("frequencia_corte1"));
-                    }
-                    if (request.getParameter("frequencia_corte2") != null && !request.getParameter("frequencia_corte2").isEmpty()) {
-                        frequenciaCorte2 = Integer.parseInt(request.getParameter("frequencia_corte2"));
-                    }
-                %>
+            <%
+                String tipoSinal = request.getParameter("tipo_sinal");
+                Integer frequencia = null;
+                if (request.getParameter("frequencia") != null && !request.getParameter("frequencia").isEmpty()) {
+                    frequencia = Integer.parseInt(request.getParameter("frequencia"));
+                }
+                String tipoCanal = request.getParameter("tipo_canal");
+                Integer frequenciaCorte0 = null;
+                Integer frequenciaCorte1 = null;
+                Integer frequenciaCorte2 = null;
+                if (request.getParameter("frequencia_corte0") != null && !request.getParameter("frequencia_corte0").isEmpty()) {
+                    frequenciaCorte0 = Integer.parseInt(request.getParameter("frequencia_corte0"));
+                }
+                if (request.getParameter("frequencia_corte1") != null && !request.getParameter("frequencia_corte1").isEmpty()) {
+                    frequenciaCorte1 = Integer.parseInt(request.getParameter("frequencia_corte1"));
+                }
+                if (request.getParameter("frequencia_corte2") != null && !request.getParameter("frequencia_corte2").isEmpty()) {
+                    frequenciaCorte2 = Integer.parseInt(request.getParameter("frequencia_corte2"));
+                }
+            %>
 
             <div id="plot" style="width:100%;height:400px;"></div>
 
@@ -50,10 +48,10 @@
                 <% if (frequencia != null) { %>
                 var frequenciaJS = <%= frequencia %>;
 
-                // Definir os parâmetros
+                // Parâmetros
                 const t_i = -3;
                 const t_f = 3;
-                const passo = 0.00001;
+                const passo = 0.001;
                 const f0 = frequenciaJS;
 
                 // Gerar os dados da onda quadrada
@@ -77,9 +75,9 @@
                 const data = [trace];
 
                 const layout = {
-                    title: 'Sinal emitido',
+                    title: 'Sinal emitido (Onda Quadrada)',
                     xaxis: {title: 'Tempo (s)'},
-                    yaxis: {title: ''}
+                    yaxis: {title: 'Amplitude'}
                 };
 
                 // Renderizar o gráfico de onda quadrada
