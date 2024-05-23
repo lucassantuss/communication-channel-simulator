@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class SimuladorController extends HttpServlet {
-    
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String tipoSinal = request.getParameter("tipo_sinal");
         int frequencia = Integer.parseInt(request.getParameter("frequencia"));
@@ -17,14 +17,9 @@ public class SimuladorController extends HttpServlet {
 
         CanalComunicacao canal = new CanalComunicacao(tipoSinal, frequencia, tipoCanal, frequenciaCorte);
 
-        // TO DO 
-        // Chamar método para processar os dados e gerar os resultados
-        // Resultado resultado = simuladorService.simular(canal);
-
-        // Definir resultados como atributos de requisição
-        // request.setAttribute("resultado", resultado);
-
+        // TODO
+        // Passar os dados como parametros do QueryString para a pagina de resultados
         // Redireciona para a página de resultados
-        request.getRequestDispatcher("resultados_simulacao.html").forward(request, response);
+        request.getRequestDispatcher("processar.jsp").forward(request, response);
     }
 }

@@ -16,23 +16,23 @@
             </div>
         </header>
         <main class="container mt-4">
-            <form id="sinalForm" action="resultado_onda_quadrada.jsp">
-                <div class="form-group">
+            <form id="sinalForm" action="processar.jsp">
+                <div class="form-group required">
                     <label for="tipo_sinal">Escolha o tipo de sinal:</label>
-                    <select class="form-control" name="tipo_sinal" id="tipo_sinal">
+                    <select class="form-control" name="tipo_sinal" id="tipo_sinal" required>
                         <option value="quadrada">Onda Quadrada</option>
                         <option value="triangular">Onda Triangular</option>
                         <option value="dente_serra">Onda Dente-de-Serra</option>
                         <option value="senoidal_retificada">Onda Senoidal Retificada</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="frequencia">Digite a frequência fundamental (1 kHz - 100 kHz):</label>
-                    <input type="number" class="form-control" id="frequencia" name="frequencia" min="1" max="100" step="1">
+                    <input type="number" class="form-control" id="frequencia" name="frequencia" min="1" max="100" step="1" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group required">
                     <label for="tipo_canal">Escolha o tipo de canal:</label>
-                    <select class="form-control" name="tipo_canal" id="tipo_canal">
+                    <select class="form-control" name="tipo_canal" id="tipo_canal" required>
                         <option value="">Selecione...</option>
                         <option value="passa_baixas">Canal Passa-Baixas</option>
                         <option value="passa_faixas">Canal Passa-Faixas</option>
@@ -76,36 +76,21 @@
             </div>
         </footer>
 
-        <script>
-            $(document).ready(function () {
-                $('#tipo_canal').on('change', function () {
-                    var selectedOption = this.value;
+     <script>
+        $(document).ready(function () {
+            $('#tipo_canal').on('change', function () {
+                var selectedOption = this.value;
 
-                    $('#passa_baixas_content').hide();
-                    $('#passa_faixas_content').hide();
+                $('#passa_baixas_content').hide();
+                $('#passa_faixas_content').hide();
 
-                    if (selectedOption === 'passa_baixas') {
-                        $('#passa_baixas_content').show();
-                    } else if (selectedOption === 'passa_faixas') {
-                        $('#passa_faixas_content').show();
-                    }
-                });
-
-                $('#tipo_sinal').on('change', function () {
-                    var selectedOption = $(this).val();
-
-                    var formAction = 'resultado_onda_quadrada.jsp';
-                    if (selectedOption === 'triangular') {
-                        formAction = 'resultado_onda_triangular.jsp';
-                    } else if (selectedOption === 'dente_serra') {
-                        formAction = 'resultado_onda_dente_de_serra.jsp';
-                    } else if (selectedOption === 'senoidal_retificada') {
-                        formAction = 'resultado_onda_senoidal_retificada.jsp';
-                    }
-
-                    $('#sinalForm').attr('action', formAction);
-                });
+                if (selectedOption === 'passa_baixas') {
+                    $('#passa_baixas_content').show();
+                } else if (selectedOption === 'passa_faixas') {
+                    $('#passa_faixas_content').show();
+                }
             });
-        </script>
+        });
+    </script>
     </body>
 </html>
