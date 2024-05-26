@@ -150,7 +150,7 @@
                         bn = (2 / T) * bn;
                         f.push(n / T);
                         A.push(Math.sqrt(an * an + bn * bn));
-                        fase.push(Math.atan2(bn, an));
+                        fase.push((180 / Math.PI) * Math.atan2(bn, an));
                     }
                     return {f, A, fase};
                 }
@@ -168,7 +168,7 @@
                     };
                     const layout = {
                         title: {
-                            text: 'Série de Fourier (Amplitude)',
+                            text: 'Sinal de Entrada (Amplitude)',
                             font: {
                                 family: 'Arial, sans-serif',
                                 size: 22,
@@ -184,14 +184,30 @@
 
                 // Função para gerar o gráfico da Série de Fourier (Fase)
                 function plotSerieFourierFase() {
+                    // Filtrar os valores de fase negativa
+                    const f_negativo = [];
+                    const fase_negativa = [];
+                    for (let i = 0; i < fourier.f.length; i++) {
+                        if (fourier.fase[i] < 0) { // Considerando apenas fase negativa
+                            f_negativo.push(fourier.f[i]);
+                            fase_negativa.push(fourier.fase[i]);
+                        }
+                    }
+
                     const trace = {
-                        x: fourier.f,
-                        y: fourier.fase,
+                        x: f_negativo,
+                        y: fase_negativa,
                         type: 'bar'
                     };
+                                        
+                    //const trace = {
+                    //   x: fourier.f,
+                    //   y: saidaFase,
+                    //    type: 'bar'
+                    //};
                     const layout = {
                         title: {
-                            text: 'Série de Fourier (Fase)',
+                            text: 'Sinal de Entrada (Fase)',
                             font: {
                                 family: 'Arial, sans-serif',
                                 size: 22,
@@ -199,39 +215,50 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_serie_fourier_fase', [trace], layout);
                 }
 
                 // Funções para as respostas dos canais de comunicação
-                function respostaPassaBaixas(f, fc) {
-                    return f.map(fi => fi <= fc ? 1 : 0);
+                function respostaModuloPassaBaixas(frequencias, fc) {
+                    return frequencias.map(f => 1 / Math.sqrt(1 + Math.pow(f / fc, 2)));
+                }
+                
+                function respostaFasePassaBaixas(frequencias, fc) {
+                    return frequencias.map(f => Math.atan(-f / fc) * (180 / Math.PI));
                 }
 
-                function respostaPassaFaixas(f, fc1, fc2) {
-                    return f.map(fi => (fi >= fc1 && fi <= fc2) ? 1 : 0);
+                function respostaModuloPassaFaixas(frequencias, f1, f2) {
+                    return frequencias.map(f => (1 / (f2 - f1)) * (1 / (1 + Math.pow(f / f1, 2))) * (1 / (1 + Math.pow(f / f2, 2))));
                 }
 
-                // Calcular a resposta do canal
-                let resposta;
+                function respostaFasePassaFaixas(frequencias, f1, f2) {
+                    return frequencias.map(f => (-90 - Math.atan((f * (f1 + f2)) / (f1 * f2 - Math.pow(f, 2)))) * (180 / Math.PI));
+                }
+
+                // Calcular a resposta do modulo e fase do canal
+                let respostaModulo;
+                let respostaFase;
                 if (tipoCanal === 'passa_baixas' && frequenciaCorte0 != null) {
-                    resposta = respostaPassaBaixas(fourier.f, frequenciaCorte0);
+                    respostaModulo = respostaModuloPassaBaixas(fourier.f, frequenciaCorte0);
+                    respostaFase = respostaFasePassaBaixas(fourier.f, frequenciaCorte0);
                 } else if (tipoCanal === 'passa_faixas' && frequenciaCorte1 != null && frequenciaCorte2 != null) {
-                    resposta = respostaPassaFaixas(fourier.f, frequenciaCorte1, frequenciaCorte2);
+                    respostaModulo = respostaModuloPassaFaixas(fourier.f, frequenciaCorte1, frequenciaCorte2);
+                    respostaFase = respostaFasePassaFaixas(fourier.f, frequenciaCorte1, frequenciaCorte2);
                 }
 
                 // Função para gerar o gráfico do módulo da resposta em frequência do canal
                 function plotRespostaFrequenciaModulo() {
                     const trace = {
                         x: fourier.f,
-                        y: resposta,
+                        y: respostaModulo,
                         type: 'scatter'
                     };
                     const layout = {
                         title: {
-                            text: 'Resposta em Frequência (Módulo)',
+                            text: 'Módulo da Resposta em Frequência',
                             font: {
                                 family: 'Arial, sans-serif',
                                 size: 22,
@@ -240,7 +267,7 @@
                             }
                         },
 
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Módulo'}
                     };
                     Plotly.newPlot('plot_resposta_frequencia_modulo', [trace], layout);
@@ -248,15 +275,14 @@
 
                 // Função para gerar o gráfico da fase da resposta em frequência do canal
                 function plotRespostaFrequenciaFase() {
-                    const faseResposta = resposta.map(v => Math.atan2(0, v)); // Aproximação simplificada
                     const trace = {
                         x: fourier.f,
-                        y: faseResposta,
+                        y: respostaFase,
                         type: 'scatter'
                     };
                     const layout = {
                         title: {
-                            text: 'Resposta em Frequência (Fase)',
+                            text: 'Fase da Resposta em Frequência',
                             font: {
                                 family: 'Arial, sans-serif',
                                 size: 22,
@@ -265,14 +291,14 @@
                             }
                         },
 
-                        xaxis: {title: 'Frequência (Hz)'},
-                        yaxis: {title: 'Fase (radianos)'}
+                        xaxis: {title: 'Frequência (kHz)'},
+                        yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_resposta_frequencia_fase', [trace], layout);
                 }
 
                 // Calcular a saída do canal
-                const saidaAmplitude = fourier.A.map((a, i) => a * resposta[i]);
+                const saidaAmplitude = fourier.A.map((a, i) => a * respostaModulo[i]);
                 const saidaFase = fourier.fase; // Supondo que a fase não muda
 
                 // Função para gerar o gráfico da amplitude das componentes do sinal de saída
@@ -293,7 +319,7 @@
                             }
                         },
 
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Amplitude'}
                     };
                     Plotly.newPlot('plot_saida_fourier_amplitude', [trace], layout);
@@ -301,11 +327,27 @@
 
                 // Função para gerar o gráfico da fase das componentes do sinal de saída
                 function plotSaidaFourierFase() {
+                    // Filtrar os valores de fase negativa
+                    const f_negativo = [];
+                    const fase_negativa = [];
+                    for (let i = 0; i < fourier.f.length; i++) {
+                        if (fourier.fase[i] < 0) { // Considerando apenas fase negativa
+                            f_negativo.push(fourier.f[i]);
+                            fase_negativa.push(fourier.fase[i]);
+                        }
+                    }
+
                     const trace = {
-                        x: fourier.f,
-                        y: saidaFase,
+                        x: f_negativo,
+                        y: fase_negativa,
                         type: 'bar'
                     };
+                    
+                    //const trace = {
+                    //   x: fourier.f,
+                    //   y: saidaFase,
+                    //    type: 'bar'
+                    //};
                     const layout = {
                         title: {
                             text: 'Sinal de Saída (Fase)',
@@ -317,7 +359,7 @@
                             }
                         },
 
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_saida_fourier_fase', [trace], layout);
