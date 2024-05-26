@@ -42,6 +42,47 @@
                 }
             %>
 
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tipo de Sinal:</strong> 
+                        <%
+                            String tipoSinalDescricao = "";
+                            if (tipoSinal.equals("quadrada")) {
+                                tipoSinalDescricao = "Onda Quadrada";
+                            } else if (tipoSinal.equals("triangular")) {
+                                tipoSinalDescricao = "Onda Triangular";
+                            } else if (tipoSinal.equals("dente_serra")) {
+                                tipoSinalDescricao = "Onda Dente-de-Serra";
+                            } else if (tipoSinal.equals("senoidal_retificada")) {
+                                tipoSinalDescricao = "Onda Senoidal Retificada";
+                            }
+                        %>
+                        <%= tipoSinalDescricao %>
+                    </p>
+                    <p><strong>Frequência Fundamental:</strong> <%= frequencia %> kHz</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Tipo de Canal:</strong> 
+                        <%
+                            String tipoCanalDescricao = "";
+                            if (tipoCanal.equals("passa_baixas")) {
+                                tipoCanalDescricao = "Canal Passa-Baixas";
+                            } else if (tipoCanal.equals("passa_faixas")) {
+                                tipoCanalDescricao = "Canal Passa-Faixas";
+                            }
+                        %>
+                        <%= tipoCanalDescricao %>
+                    </p>
+                    <% if (tipoCanal.equals("passa_baixas")) { %>
+                    <p><strong>Frequência de Corte:</strong> <%= frequenciaCorte0 %> kHz</p>
+                    <% } else if (tipoCanal.equals("passa_faixas")) { %>
+                    <p><strong>Frequência de Corte Inferior:</strong> <%= frequenciaCorte1 %> kHz</p>
+                    <p><strong>Frequência de Corte Superior:</strong> <%= frequenciaCorte2 %> kHz</p>
+                    <% } %>
+                </div>
+            </div><br>
+
             <div id="plot_sinal_emitido" style="width:100%;height:400px;"></div><br>
             <div id="plot_serie_fourier_amplitude" style="width:100%;height:400px;"></div><br>
             <div id="plot_serie_fourier_fase" style="width:100%;height:400px;"></div><br>
@@ -188,7 +229,7 @@
                     const f_negativo = [];
                     const fase_negativa = [];
                     for (let i = 0; i < fourier.f.length; i++) {
-                        if (fourier.fase[i] < 0) { // Considerando apenas fase negativa
+                        if (fourier.f[i] <= 50 && fourier.fase[i] < 0) { // Considerando apenas frequências até 50 kHz e fase negativa
                             f_negativo.push(fourier.f[i]);
                             fase_negativa.push(fourier.fase[i]);
                         }
@@ -199,12 +240,6 @@
                         y: fase_negativa,
                         type: 'bar'
                     };
-                                        
-                    //const trace = {
-                    //   x: fourier.f,
-                    //   y: saidaFase,
-                    //    type: 'bar'
-                    //};
                     const layout = {
                         title: {
                             text: 'Sinal de Entrada (Fase)',
@@ -225,7 +260,7 @@
                 function respostaModuloPassaBaixas(frequencias, fc) {
                     return frequencias.map(f => 1 / Math.sqrt(1 + Math.pow(f / fc, 2)));
                 }
-                
+
                 function respostaFasePassaBaixas(frequencias, fc) {
                     return frequencias.map(f => Math.atan(-f / fc) * (180 / Math.PI));
                 }
@@ -331,7 +366,7 @@
                     const f_negativo = [];
                     const fase_negativa = [];
                     for (let i = 0; i < fourier.f.length; i++) {
-                        if (fourier.fase[i] < 0) { // Considerando apenas fase negativa
+                        if (fourier.f[i] <= 50 && fourier.fase[i] < 0) { // Considerando apenas frequências até 50 kHz e fase negativa
                             f_negativo.push(fourier.f[i]);
                             fase_negativa.push(fourier.fase[i]);
                         }
@@ -342,7 +377,7 @@
                         y: fase_negativa,
                         type: 'bar'
                     };
-                    
+
                     //const trace = {
                     //   x: fourier.f,
                     //   y: saidaFase,
