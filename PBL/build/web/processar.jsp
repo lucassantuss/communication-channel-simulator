@@ -126,7 +126,7 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Tempo (s)'},
+                        xaxis: {title: 'Tempo (ms)'},
                         yaxis: {title: 'Amplitude'}
                     };
                     Plotly.newPlot('plot_sinal_emitido', [trace], layout);
@@ -156,7 +156,7 @@
                 }
 
                 // Calcular a Série de Fourier do sinal emitido
-                const N = 50; // Número de harmônicos
+                const N = 305; // Número de harmônicos
                 const fourier = serieFourier(sinal, t, N);
 
                 // Função para gerar o gráfico da Série de Fourier (Amplitude)
@@ -176,7 +176,7 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Amplitude'}
                     };
                     Plotly.newPlot('plot_serie_fourier_amplitude', [trace], layout);
@@ -200,7 +200,7 @@
                             }
                         },
                         xaxis: {title: 'Frequência (Hz)'},
-                        yaxis: {title: 'Fase (radianos)'}
+                        yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_serie_fourier_fase', [trace], layout);
                 }
@@ -318,7 +318,7 @@
                         },
 
                         xaxis: {title: 'Frequência (Hz)'},
-                        yaxis: {title: 'Fase (radianos)'}
+                        yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_saida_fourier_fase', [trace], layout);
                 }
@@ -356,7 +356,7 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Tempo (s)'},
+                        xaxis: {title: 'Tempo (ms)'},
                         yaxis: {title: 'Amplitude'}
                     };
                     Plotly.newPlot('plot_sinal_recebido', [trace], layout);

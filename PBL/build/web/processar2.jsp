@@ -199,7 +199,7 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Frequência (Hz)'},
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_serie_fourier_fase', [trace], layout);
@@ -266,7 +266,7 @@
                         },
 
                         xaxis: {title: 'Frequência (Hz)'},
-                        yaxis: {title: 'Fase (radianos)'}
+                        yaxis: {title: 'Fase (°)'}
                     };
                     Plotly.newPlot('plot_resposta_frequencia_fase', [trace], layout);
                 }
@@ -318,7 +318,7 @@
                         },
 
                         xaxis: {title: 'Frequência (Hz)'},
-                        yaxis: {title: 'Fase (°)'}
+                        yaxis: {title: 'Fase (radianos)'}
                     };
                     Plotly.newPlot('plot_saida_fourier_fase', [trace], layout);
                 }
@@ -356,7 +356,7 @@
                                 weight: 'bold'
                             }
                         },
-                        xaxis: {title: 'Tempo (ms)'},
+                        xaxis: {title: 'Tempo (s)'},
                         yaxis: {title: 'Amplitude'}
                     };
                     Plotly.newPlot('plot_sinal_recebido', [trace], layout);
