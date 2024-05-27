@@ -100,14 +100,12 @@
                 var frequenciaCorte0 = <%= frequenciaCorte0 != null ? frequenciaCorte0 : "null" %>;
                 var frequenciaCorte1 = <%= frequenciaCorte1 != null ? frequenciaCorte1 : "null" %>;
                 var frequenciaCorte2 = <%= frequenciaCorte2 != null ? frequenciaCorte2 : "null" %>;
-
                 // Parâmetros gerais
                 const t_i = -3;
                 const t_f = 3;
                 const passo = 0.00001;
                 const f0 = frequenciaJS;
                 const periodo = 1 / f0;
-
                 let t = [];
                 for (let i = t_i; i < t_f; i += passo) {
                     t.push(-i);
@@ -158,7 +156,8 @@
                 const trace = {
                     x: t1,
                     y: sinal,
-                    type: 'scatter'
+                    type: 'scatter',
+                    line: {color: '#007bff'}
                 };
                 const layout = {
                     title: {
@@ -174,25 +173,18 @@
                     yaxis: {title: 'Amplitude'}
                 };
                 Plotly.newPlot('plot_sinal_emitido', [trace], layout);
-
                 let f_final = 50;
                 let f = [];
                 for (let i = 0; i < f_final; i += 0.001) {
                     f.push(i);
                 }
 
-                //let x_fourier = Array(t.length).fill(0);
-
                 let a0 = 0;
                 let N = 50;
-
                 let vetor_An = Array(N).fill(0);
                 let vetor_phi_n = Array(N).fill(0);
-
-                
                 let vetor_An_sinal_de_saida = new Array(N).fill(0);
                 let vetor_phi_n_sinal_de_saida = new Array(N).fill(0);
-
                 if (tipoSinal === 'quadrada') {
                     // *** ESPECTRO DE ENTRADA ***
                     for (let n = 1; n <= N; n++) {
@@ -205,7 +197,6 @@
                         }
                         vetor_An[n - 1] = An;
                         vetor_phi_n[n - 1] = phi_n;
-
                         /*for (let i = 0; i < t.length; i++) {
                          x_fourier[i] += An * Math.cos(2 * Math.PI * n * f0 * t[i] + phi_n);
                          }*/
@@ -255,36 +246,47 @@
                         y: [a0, ...vetor_An],
                         type: 'bar',
                         mode: 'lines+markers',
-                        marker: {color: 'blue'}
+                        marker: {color: '#007bff'}
                     };
-
                     let phaseTrace = {
                         x: f1,
                         y: [0, ...vetor_phi_n.map(phi => (180 / Math.PI) * phi)],
                         type: 'bar',
                         mode: 'lines+markers',
-                        marker: {color: 'blue'}
+                        marker: {color: '#007bff'}
                     };
-
                     let layoutAmplitude = {
-                        title: 'Amplitude',
-                        xaxis: {title: 'f (Hz)'},
+                        title: {
+                            text: 'Sinal de Entrada (Amplitude)',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Amplitude'},
                         showlegend: false
                     };
-
                     let layoutPhase = {
-                        title: 'Fase (°)',
-                        xaxis: {title: 'f (Hz)'},
+                        title: {
+                            text: 'Sinal de Entrada (Fase)',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Fase (°)'},
                         showlegend: false
                     };
-
                     Plotly.newPlot('plot_serie_fourier_amplitude', [amplitudeTrace], layoutAmplitude);
                     Plotly.newPlot('plot_serie_fourier_fase', [phaseTrace], layoutPhase);
                 }
                 PlotEspectroSinalEntrada();
-
                 function respostaModuloPassaBaixas(f, f_c) {
                     return 1 / Math.sqrt(1 + Math.pow(f / f_c, 2));
                 }
@@ -305,13 +307,21 @@
                         x: f,
                         y: modulo,
                         mode: 'lines',
-                        name: 'Modulo da Resposta em Frequência',
-                        line: {color: 'blue'}
+                        name: 'Módulo da Resposta em Frequência',
+                        line: {color: '#007bff'}
                     };
                     let layout1 = {
-                        title: 'Modulo da Resposta em Frequência',
-                        xaxis: {title: 'f'},
-                        yaxis: {title: 'Modulo'},
+                        title: {
+                            text: 'Módulo da Resposta em Frequência',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Frequência (kHz)'},
+                        yaxis: {title: 'Módulo'},
                         autosize: true,
                         grid: true
                     };
@@ -324,12 +334,21 @@
                         y: fase,
                         mode: 'lines',
                         name: 'Fase da Resposta em Frequência',
-                        line: {color: 'blue'}
+                        line: {color: '#007bff'}
                     };
                     let layout2 = {
-                        title: 'Fase da Resposta em Frequência',
-                        xaxis: {title: 'f'},
-                        yaxis: {title: 'Fase (graus)'},
+                        title: {
+                            text: 'Fase da Resposta em Frequência',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+
+                        xaxis: {title: 'Frequência (kHz)'},
+                        yaxis: {title: 'Fase (°)'},
                         autosize: true,
                         grid: true
                     };
@@ -339,42 +358,6 @@
                 plotRespostaFrequenciaModulo();
                 plotRespostaFrequenciaFase();
 
-
-                /*let trace1 = {
-                 x: f,
-                 y: modulo,
-                 mode: 'lines',
-                 name: 'Modulo da Resposta em Frequência',
-                 line: {color: 'blue'}
-                 };
-                 
-                 let trace2 = {
-                 x: f,
-                 y: fase,
-                 mode: 'lines',
-                 name: 'Fase da Resposta em Frequência',
-                 line: {color: 'blue'}
-                 };
-                 
-                 let layout1 = {
-                 title: 'Modulo da Resposta em Frequência',
-                 xaxis: {title: 'f'},
-                 yaxis: {title: 'Modulo'},
-                 autosize: true,
-                 grid: true
-                 };
-                 
-                 let layout2 = {
-                 title: 'Fase da Resposta em Frequência',
-                 xaxis: {title: 'f'},
-                 yaxis: {title: 'Fase (graus)'},
-                 autosize: true,
-                 grid: true
-                 };
-                 
-                 // Plot the graphs
-                 Plotly.newPlot('plot_resposta_frequencia_modulo', [trace1], layout1);
-                 Plotly.newPlot('plot_resposta_frequencia_fase', [trace2], layout2);*/
                 let a0_saida = a0 * respostaModuloPassaBaixas(0, frequenciaCorte0);
                 function PlotEspectroSinalSaida() {
                     let amplitudeTraceSaida = {
@@ -382,43 +365,52 @@
                         y: [a0_saida, ...vetor_An_sinal_de_saida],
                         type: 'bar',
                         mode: 'lines+markers',
-                        name: 'Amplitude',
-                        marker: {color: 'blue'}
+                        name: 'Sinal de Saída (Amplitude)',
+                        marker: {color: '#007bff'}
                     };
-
                     let PhaseTraceSaida = {
                         x: f1,
                         y: [0, ...vetor_phi_n_sinal_de_saida.map(phi => (180 / Math.PI) * phi)],
                         type: 'bar',
                         mode: 'lines+markers',
-                        name: 'Fase',
-                        marker: {color: 'blue'}
+                        name: 'Sinal de Saída (Fase)',
+                        marker: {color: '#007bff'}
                     };
-
                     let layoutAmplitudeSaida = {
-                        title: 'Amplitude',
-                        xaxis: {title: 'f (Hz)'},
+                        title: {
+                            text: 'Sinal de Saída (Amplitude)',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Amplitude'},
                         grid: true
                     };
-
                     let layoutFaseSaida = {
-                        title: 'Fase',
-                        xaxis: {title: 'f (Hz)'},
+                        title: {
+                            text: 'Sinal de Saída (Fase)',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Frequência (kHz)'},
                         yaxis: {title: 'Fase (°)'},
                         grid: true
                     };
-
                     // Plot the graphs
                     Plotly.newPlot('plot_saida_fourier_amplitude', [amplitudeTraceSaida], layoutAmplitudeSaida);
                     Plotly.newPlot('plot_saida_fourier_fase', [PhaseTraceSaida], layoutFaseSaida);
                 }
                 PlotEspectroSinalSaida();
-
-
                 //Calculo para gerar sinal recebido
                 let y1 = new Array(t.length).fill(a0_saida);
-
                 for (let n = 1; n <= N; n++) {
                     for (let i = 0; i < t.length; i++) {
                         y1[i] += vetor_An_sinal_de_saida[n - 1] * Math.cos(2 * Math.PI * n * f0 * t[i] + vetor_phi_n_sinal_de_saida[n - 1]);
@@ -430,24 +422,27 @@
                         x: t,
                         y: y1,
                         mode: 'lines',
-                        name: 'Recebido',
+                        name: 'Sinal Recebido',
                         line: {color: 'red'}
                     };
-
                     let layoutRecebido = {
-                        title: 'Entrada e Saída do Canal',
-                        xaxis: {title: 't (s)'},
+                        title: {
+                            text: 'Sinal Recebido',
+                            font: {
+                                family: 'Arial, sans-serif',
+                                size: 22,
+                                color: '#000',
+                                weight: 'bold'
+                            }
+                        },
+                        xaxis: {title: 'Tempo (ms)'},
                         yaxis: {title: 'Amplitude'},
                         grid: true
                     };
-
                     // Plot the graph
                     Plotly.newPlot('plot_sinal_recebido', [traceRecebido], layoutRecebido);
                 }
                 PlotSinalRecebido();
-
-
-
                 <% } %>
             </script>
         </main>
