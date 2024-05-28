@@ -285,7 +285,7 @@
                 }
 
                 // Função para gerar o gráfico do módulo da resposta em frequência do canal
-                function plotRespostaFrequenciaModulo() {
+                function plotRespostaFrequenciaModulo()  {
                     const trace = {
                         x: fourier.f,
                         y: respostaModulo,

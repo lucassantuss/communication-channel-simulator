@@ -100,13 +100,16 @@
                 var frequenciaCorte0 = <%= frequenciaCorte0 != null ? frequenciaCorte0 : "null" %>;
                 var frequenciaCorte1 = <%= frequenciaCorte1 != null ? frequenciaCorte1 : "null" %>;
                 var frequenciaCorte2 = <%= frequenciaCorte2 != null ? frequenciaCorte2 : "null" %>;
-
                 // Parâmetros gerais
                 const t_i = -3;
                 const t_f = 3;
-                const passo = 0.001;
+                const passo = 0.00001;
                 const f0 = frequenciaJS;
                 const periodo = 1 / f0;
+                let t = [];
+                for (let i = t_i; i < t_f; i += passo) {
+                    t.push(-i);
+                }
 
                 // Funções para gerar os sinais
                 function ondaQuadrada(t, f0) {
@@ -133,10 +136,10 @@
                 }
 
                 // Gerar dados do sinal de entrada
-                const t = [];
+                const t1 = [];
                 const sinal = [];
                 for (let i = t_i; i <= t_f; i += passo) {
-                    t.push(i);
+                    t1.push(i);
                     let valor;
                     if (tipoSinal === 'quadrada') {
                         valor = ondaQuadrada(i, f0);
@@ -150,64 +153,161 @@
                     sinal.push(valor);
                 }
 
-                // Função para gerar o gráfico do sinal emitido
-                function plotSinalEmitido() {
-                    const trace = {
-                        x: t,
-                        y: sinal,
-                        type: 'scatter'
-                    };
-                    const layout = {
-                        title: {
-                            text: 'Sinal Emitido',
-                            font: {
-                                family: 'Arial, sans-serif',
-                                size: 22,
-                                color: '#000',
-                                weight: 'bold'
-                            }
-                        },
-                        xaxis: {title: 'Tempo (ms)'},
-                        yaxis: {title: 'Amplitude'}
-                    };
-                    Plotly.newPlot('plot_sinal_emitido', [trace], layout);
-                }
-
-                // Função para calcular a Série de Fourier
-                function serieFourier(sinal, t, N) {
-                    const dt = t[1] - t[0];
-                    const T = t[t.length - 1] - t[0];
-                    const f = [];
-                    const A = [];
-                    const fase = [];
-                    for (let n = 0; n < N; n++) {
-                        let an = 0;
-                        let bn = 0;
-                        for (let i = 0; i < t.length; i++) {
-                            an += sinal[i] * Math.cos(2 * Math.PI * n * t[i] / T) * dt;
-                            bn += sinal[i] * Math.sin(2 * Math.PI * n * t[i] / T) * dt;
+                const trace = {
+                    x: t1,
+                    y: sinal,
+                    type: 'scatter',
+                    line: {color: '#007bff'}
+                };
+                const layout = {
+                    title: {
+                        text: 'Sinal Emitido',
+                        font: {
+                            family: 'Arial, sans-serif',
+                            size: 22,
+                            color: '#000',
+                            weight: 'bold'
                         }
-                        an = (2 / T) * an;
-                        bn = (2 / T) * bn;
-                        f.push(n / T);
-                        A.push(Math.sqrt(an * an + bn * bn));
-                        fase.push((180 / Math.PI) * Math.atan2(bn, an));
-                    }
-                    return {f, A, fase};
+                    },
+                    xaxis: {title: 'Tempo (ms)'},
+                    yaxis: {title: 'Amplitude'}
+                };
+                Plotly.newPlot('plot_sinal_emitido', [trace], layout);
+                let f_final = 50;
+                let f = [];
+                for (let i = 0; i < f_final; i += 0.001) {
+                    f.push(i);
                 }
 
-                // Calcular a Série de Fourier do sinal emitido
-                const N = 305; // Número de harmônicos
-                const fourier = serieFourier(sinal, t, N);
+                let a0 = 0;
+                let N = 50;
+                let vetor_An = Array(N).fill(0);
+                let vetor_phi_n = Array(N).fill(0);
+                let vetor_An_sinal_de_saida = new Array(N).fill(0);
+                let vetor_phi_n_sinal_de_saida = new Array(N).fill(0);
+                if (tipoSinal === 'quadrada') {
+                    // *** ESPECTRO DE ENTRADA ***
+                    for (let n = 1; n <= N; n++) {
+                        if (n % 2 === 0) {
+                            An = 0;
+                            phi_n = 0;
+                        } else {
+                            An = 4 / (Math.PI * n);
+                            phi_n = -Math.PI / 2;
+                        }
+                        vetor_An[n - 1] = An;
+                        vetor_phi_n[n - 1] = phi_n;
+                        /*for (let i = 0; i < t.length; i++) {
+                         x_fourier[i] += An * Math.cos(2 * Math.PI * n * f0 * t[i] + phi_n);
+                         }*/
+                    }
 
-                // Função para gerar o gráfico da Série de Fourier (Amplitude)
-                function plotSerieFourierAmplitude() {
-                    const trace = {
-                        x: fourier.f,
-                        y: fourier.A,
-                        type: 'bar'
+                    // *** ESPECTRO DE SAÍDA ***
+                    for (let n = 1; n <= N; n++) {
+                        if (n % 2 === 0) {
+                            vetor_An_sinal_de_saida[n - 1] = 0;
+                            vetor_phi_n_sinal_de_saida[n - 1] = 0;
+                        } else {
+                            let An_entrada = 4 / (Math.PI * n);
+                            let phi_n_entrada = -Math.PI / 2;
+                            vetor_phi_n_sinal_de_saida[n - 1] = phi_n_entrada + respostaFasePassaBaixas(n * f0, frequenciaCorte0);
+                            vetor_An_sinal_de_saida[n - 1] = An_entrada * respostaModuloPassaBaixas(n * f0, frequenciaCorte0);
+                        }
+                    }
+
+                }
+
+                if (tipoSinal === 'dente_serra') {
+                    a0 = 0.5;
+                    for (let n = 1; n <= N; n++) {
+                        An = 1 / (Math.PI * n);
+                        phi_n = Math.PI / 2;
+                        vetor_An[n - 1] = An;
+                        vetor_phi_n[n - 1] = phi_n;
+                    }
+                    // *** ESPECTRO DE SAÍDA ***
+                    for (let n = 1; n <= N; n++) {
+                        let An_entrada = 1 / (Math.PI * n);
+                        let phi_n_entrada = Math.PI / 2;
+                        vetor_An_sinal_de_saida[n - 1] = An_entrada * respostaModuloPassaBaixas(n * f0, frequenciaCorte0);
+                        vetor_phi_n_sinal_de_saida[n - 1] = phi_n_entrada + respostaFasePassaBaixas(n * f0, frequenciaCorte0);
+                    }
+
+                }
+
+                if (tipoSinal === 'triangular') {
+                    for (let n = 1; n <= N; n++) {
+                        let An;
+                        let phi_n;
+                        if (n % 2 === 0) {
+                            An = 0;
+                            phi_n = 0;
+                        } else {
+                            An = 8 / (Math.PI ** 2 * n ** 2);
+                            phi_n = -Math.PI / 2;
+                        }
+                        vetor_An[n - 1] = An;
+                        vetor_phi_n[n - 1] = phi_n;
+
+                        if (n % 2 === 0) {
+                            vetor_An_sinal_de_saida[n - 1] = 0;
+                            vetor_phi_n_sinal_de_saida[n - 1] = 0;
+                        } else {
+                            let An_entrada = 8 / (Math.PI ** 2 * n ** 2);
+                            let phi_n_entrada = -Math.PI / 2;
+                            vetor_phi_n_sinal_de_saida[n - 1] = phi_n_entrada + respostaFasePassaBaixas(n * f0, frequenciaCorte0);
+                            vetor_An_sinal_de_saida[n - 1] = An_entrada * respostaModuloPassaBaixas(n * f0, frequenciaCorte0);
+                        }
+                    }
+                }
+
+                if (tipoSinal === 'senoidal_retificada') {
+                    for (let n = 1; n <= N; n++) {
+                        let An;
+                        let phi_n;
+                        if (n === 1) {
+                            An = 2 / Math.PI;
+                            phi_n = -Math.PI / 2;
+                        } else {
+                            An = 0;
+                            phi_n = 0;
+                        }
+                        vetor_An[n - 1] = An;
+                        vetor_phi_n[n - 1] = phi_n;
+
+                        if (n === 1) {
+                            let An_entrada = 2 / Math.PI;
+                            let phi_n_entrada = -Math.PI / 2;
+                            vetor_phi_n_sinal_de_saida[n - 1] = phi_n_entrada + respostaFasePassaBaixas(n * f0, frequenciaCorte0);
+                            vetor_An_sinal_de_saida[n - 1] = An_entrada * respostaModuloPassaBaixas(n * f0, frequenciaCorte0);
+                        } else {
+                            vetor_An_sinal_de_saida[n - 1] = 0;
+                            vetor_phi_n_sinal_de_saida[n - 1] = 0;
+                        }
+                    }
+                }
+
+                let f1 = [];
+                for (let i = 0; i <= f_final; i++) {
+                    f1.push(i);
+                }
+
+                function PlotEspectroSinalEntrada() {
+                    let amplitudeTrace = {
+                        x: f1,
+                        y: [a0, ...vetor_An],
+                        type: 'bar',
+                        mode: 'lines+markers',
+                        marker: {color: '#007bff'}
                     };
-                    const layout = {
+                    let phaseTrace = {
+                        x: f1,
+                        y: [0, ...vetor_phi_n.map(phi => (180 / Math.PI) * phi)],
+                        type: 'bar',
+                        mode: 'lines+markers',
+                        marker: {color: '#007bff'}
+                    };
+                    let layoutAmplitude = {
                         title: {
                             text: 'Sinal de Entrada (Amplitude)',
                             font: {
@@ -218,29 +318,10 @@
                             }
                         },
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Amplitude'}
+                        yaxis: {title: 'Amplitude'},
+                        showlegend: false
                     };
-                    Plotly.newPlot('plot_serie_fourier_amplitude', [trace], layout);
-                }
-
-                // Função para gerar o gráfico da Série de Fourier (Fase)
-                function plotSerieFourierFase() {
-                    // Filtrar os valores de fase negativa
-                    const f_negativo = [];
-                    const fase_negativa = [];
-                    for (let i = 0; i < fourier.f.length; i++) {
-                        if (fourier.f[i] <= 50 && fourier.fase[i] < 0) { // Considerando apenas frequências até 50 kHz e fase negativa
-                            f_negativo.push(fourier.f[i]);
-                            fase_negativa.push(fourier.fase[i]);
-                        }
-                    }
-
-                    const trace = {
-                        x: f_negativo,
-                        y: fase_negativa,
-                        type: 'bar'
-                    };
-                    const layout = {
+                    let layoutPhase = {
                         title: {
                             text: 'Sinal de Entrada (Fase)',
                             font: {
@@ -251,47 +332,48 @@
                             }
                         },
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Fase (°)'}
+                        yaxis: {title: 'Fase (°)'},
+                        showlegend: false
                     };
-                    Plotly.newPlot('plot_serie_fourier_fase', [trace], layout);
+                    Plotly.newPlot('plot_serie_fourier_amplitude', [amplitudeTrace], layoutAmplitude);
+                    Plotly.newPlot('plot_serie_fourier_fase', [phaseTrace], layoutPhase);
+                }
+                PlotEspectroSinalEntrada();
+                function respostaModuloPassaBaixas(f, f_c) {
+                    return 1 / Math.sqrt(1 + Math.pow(f / f_c, 2));
                 }
 
-                // Funções para as respostas dos canais de comunicação
-                function respostaModuloPassaBaixas(frequencias, fc) {
-                    return frequencias.map(f => 1 / Math.sqrt(1 + Math.pow(f / fc, 2)));
+                function respostaFasePassaBaixas(f, f_c) {
+                    return Math.atan(-f / f_c);
                 }
 
-                function respostaFasePassaBaixas(frequencias, fc) {
-                    return frequencias.map(f => Math.atan(-f / fc) * (180 / Math.PI));
+                function respostaModuloPassaFaixas(f, f1, f2) {
+                    return (1 / (f2 - f1)) * (1 / (1 + Math.pow(f / f1, 2))) * (1 / (1 + Math.pow(f / f2, 2)));
                 }
 
-                function respostaModuloPassaFaixas(frequencias, f1, f2) {
-                    return frequencias.map(f => (1 / (f2 - f1)) * (1 / (1 + Math.pow(f / f1, 2))) * (1 / (1 + Math.pow(f / f2, 2))));
+                function respostaFasePassaFaixas(f, f1, f2) {
+                    return (-90 - Math.atan((f * (f1 + f2)) / (f1 * f2 - Math.pow(f, 2))));
                 }
 
-                function respostaFasePassaFaixas(frequencias, f1, f2) {
-                    return frequencias.map(f => (-90 - Math.atan((f * (f1 + f2)) / (f1 * f2 - Math.pow(f, 2)))) * (180 / Math.PI));
-                }
-
-                // Calcular a resposta do modulo e fase do canal
-                let respostaModulo;
-                let respostaFase;
+                let modulo;
+                let fase;
                 if (tipoCanal === 'passa_baixas' && frequenciaCorte0 != null) {
-                    respostaModulo = respostaModuloPassaBaixas(fourier.f, frequenciaCorte0);
-                    respostaFase = respostaFasePassaBaixas(fourier.f, frequenciaCorte0);
+                    modulo = f.map(freq => respostaModuloPassaBaixas(freq, frequenciaCorte0));
+                    fase = f.map(freq => (180 / Math.PI) * respostaFasePassaBaixas(freq, frequenciaCorte0));
                 } else if (tipoCanal === 'passa_faixas' && frequenciaCorte1 != null && frequenciaCorte2 != null) {
-                    respostaModulo = respostaModuloPassaFaixas(fourier.f, frequenciaCorte1, frequenciaCorte2);
-                    respostaFase = respostaFasePassaFaixas(fourier.f, frequenciaCorte1, frequenciaCorte2);
+                    modulo = f.map(freq => respostaModuloPassaFaixas(freq, frequenciaCorte1, frequenciaCorte2));
+                    fase = f.map(freq => (180 / Math.PI) * respostaFasePassaFaixas(freq, frequenciaCorte1, frequenciaCorte2));
                 }
 
-                // Função para gerar o gráfico do módulo da resposta em frequência do canal
-                function plotRespostaFrequenciaModulo()  {
-                    const trace = {
-                        x: fourier.f,
-                        y: respostaModulo,
-                        type: 'scatter'
+                function plotRespostaFrequenciaModulo() {
+                    let trace1 = {
+                        x: f,
+                        y: modulo,
+                        mode: 'lines',
+                        name: 'Módulo da Resposta em Frequência',
+                        line: {color: '#007bff'}
                     };
-                    const layout = {
+                    let layout1 = {
                         title: {
                             text: 'Módulo da Resposta em Frequência',
                             font: {
@@ -301,21 +383,23 @@
                                 weight: 'bold'
                             }
                         },
-
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Módulo'}
+                        yaxis: {title: 'Módulo'},
+                        autosize: true,
+                        grid: true
                     };
-                    Plotly.newPlot('plot_resposta_frequencia_modulo', [trace], layout);
+                    Plotly.newPlot('plot_resposta_frequencia_modulo', [trace1], layout1);
                 }
 
-                // Função para gerar o gráfico da fase da resposta em frequência do canal
                 function plotRespostaFrequenciaFase() {
-                    const trace = {
-                        x: fourier.f,
-                        y: respostaFase,
-                        type: 'scatter'
+                    let trace2 = {
+                        x: f,
+                        y: fase,
+                        mode: 'lines',
+                        name: 'Fase da Resposta em Frequência',
+                        line: {color: '#007bff'}
                     };
-                    const layout = {
+                    let layout2 = {
                         title: {
                             text: 'Fase da Resposta em Frequência',
                             font: {
@@ -327,23 +411,42 @@
                         },
 
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Fase (°)'}
+                        yaxis: {title: 'Fase (°)'},
+                        autosize: true,
+                        grid: true
                     };
-                    Plotly.newPlot('plot_resposta_frequencia_fase', [trace], layout);
+                    Plotly.newPlot('plot_resposta_frequencia_fase', [trace2], layout2);
                 }
 
-                // Calcular a saída do canal
-                const saidaAmplitude = fourier.A.map((a, i) => a * respostaModulo[i]);
-                const saidaFase = fourier.fase; // Supondo que a fase não muda
+                plotRespostaFrequenciaModulo();
+                plotRespostaFrequenciaFase();
 
-                // Função para gerar o gráfico da amplitude das componentes do sinal de saída
-                function plotSaidaFourierAmplitude() {
-                    const trace = {
-                        x: fourier.f,
-                        y: saidaAmplitude,
-                        type: 'bar'
+                let a0_saida = 0;
+                
+                if (tipoCanal === 'passa_baixas' && frequenciaCorte0 != null) {
+                    a0_saida = a0 * respostaModuloPassaBaixas(0, frequenciaCorte0);
+                } else if (tipoCanal === 'passa_faixas' && frequenciaCorte1 != null && frequenciaCorte2 != null) {
+                    a0_saida = a0 * respostaModuloPassaFaixas(0, frequenciaCorte1, frequenciaCorte2);
+                }
+                
+                function PlotEspectroSinalSaida() {
+                    let amplitudeTraceSaida = {
+                        x: f1,
+                        y: [a0_saida, ...vetor_An_sinal_de_saida],
+                        type: 'bar',
+                        mode: 'lines+markers',
+                        name: 'Sinal de Saída (Amplitude)',
+                        marker: {color: '#007bff'}
                     };
-                    const layout = {
+                    let PhaseTraceSaida = {
+                        x: f1,
+                        y: [0, ...vetor_phi_n_sinal_de_saida.map(phi => (180 / Math.PI) * phi)],
+                        type: 'bar',
+                        mode: 'lines+markers',
+                        name: 'Sinal de Saída (Fase)',
+                        marker: {color: '#007bff'}
+                    };
+                    let layoutAmplitudeSaida = {
                         title: {
                             text: 'Sinal de Saída (Amplitude)',
                             font: {
@@ -353,37 +456,11 @@
                                 weight: 'bold'
                             }
                         },
-
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Amplitude'}
+                        yaxis: {title: 'Amplitude'},
+                        grid: true
                     };
-                    Plotly.newPlot('plot_saida_fourier_amplitude', [trace], layout);
-                }
-
-                // Função para gerar o gráfico da fase das componentes do sinal de saída
-                function plotSaidaFourierFase() {
-                    // Filtrar os valores de fase negativa
-                    const f_negativo = [];
-                    const fase_negativa = [];
-                    for (let i = 0; i < fourier.f.length; i++) {
-                        if (fourier.f[i] <= 50 && fourier.fase[i] < 0) { // Considerando apenas frequências até 50 kHz e fase negativa
-                            f_negativo.push(fourier.f[i]);
-                            fase_negativa.push(fourier.fase[i]);
-                        }
-                    }
-
-                    const trace = {
-                        x: f_negativo,
-                        y: fase_negativa,
-                        type: 'bar'
-                    };
-
-                    //const trace = {
-                    //   x: fourier.f,
-                    //   y: saidaFase,
-                    //    type: 'bar'
-                    //};
-                    const layout = {
+                    let layoutFaseSaida = {
                         title: {
                             text: 'Sinal de Saída (Fase)',
                             font: {
@@ -393,37 +470,32 @@
                                 weight: 'bold'
                             }
                         },
-
                         xaxis: {title: 'Frequência (kHz)'},
-                        yaxis: {title: 'Fase (°)'}
+                        yaxis: {title: 'Fase (°)'},
+                        grid: true
                     };
-                    Plotly.newPlot('plot_saida_fourier_fase', [trace], layout);
+                    // Plot the graphs
+                    Plotly.newPlot('plot_saida_fourier_amplitude', [amplitudeTraceSaida], layoutAmplitudeSaida);
+                    Plotly.newPlot('plot_saida_fourier_fase', [PhaseTraceSaida], layoutFaseSaida);
                 }
-
-                // Reconstruir o sinal de saída
-                function reconstruirSinalSaida(fourier, t, saidaAmplitude, saidaFase) {
-                    const T = t[t.length - 1] - t[0];
-                    const sinalSaida = [];
+                PlotEspectroSinalSaida();
+                //Calculo para gerar sinal recebido
+                let y1 = new Array(t.length).fill(a0_saida);
+                for (let n = 1; n <= N; n++) {
                     for (let i = 0; i < t.length; i++) {
-                        let valor = 0;
-                        for (let n = 0; n < saidaAmplitude.length; n++) {
-                            valor += saidaAmplitude[n] * Math.cos(2 * Math.PI * fourier.f[n] * t[i] + saidaFase[n]);
-                        }
-                        sinalSaida.push(valor);
+                        y1[i] += vetor_An_sinal_de_saida[n - 1] * Math.cos(2 * Math.PI * n * f0 * t[i] + vetor_phi_n_sinal_de_saida[n - 1]);
                     }
-                    return sinalSaida;
                 }
 
-                const sinalSaida = reconstruirSinalSaida(fourier, t, saidaAmplitude, saidaFase);
-
-                // Função para gerar o gráfico do sinal recebido
-                function plotSinalRecebido() {
-                    const trace = {
+                function PlotSinalRecebido() {
+                    let traceRecebido = {
                         x: t,
-                        y: sinalSaida,
-                        type: 'scatter'
+                        y: y1,
+                        mode: 'lines',
+                        name: 'Sinal Recebido',
+                        line: {color: 'red'}
                     };
-                    const layout = {
+                    let layoutRecebido = {
                         title: {
                             text: 'Sinal Recebido',
                             font: {
@@ -434,21 +506,13 @@
                             }
                         },
                         xaxis: {title: 'Tempo (ms)'},
-                        yaxis: {title: 'Amplitude'}
+                        yaxis: {title: 'Amplitude'},
+                        grid: true
                     };
-                    Plotly.newPlot('plot_sinal_recebido', [trace], layout);
+                    // Plot the graph
+                    Plotly.newPlot('plot_sinal_recebido', [traceRecebido], layoutRecebido);
                 }
-
-                // Chamar as funções para gerar os gráficos
-                plotSinalEmitido();
-                plotSerieFourierAmplitude();
-                plotSerieFourierFase();
-                plotRespostaFrequenciaModulo();
-                plotRespostaFrequenciaFase();
-                plotSaidaFourierAmplitude();
-                plotSaidaFourierFase();
-                plotSinalRecebido();
-
+                PlotSinalRecebido();
                 <% } %>
             </script>
         </main>
