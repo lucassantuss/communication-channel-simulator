@@ -90,9 +90,12 @@ public class SimulacaoController extends HttpServlet {
 
         // Gráficos - Sinal de Saída (Amplitude / Fase)
         List<List<Double>> sinalSaida = GeradorSinais.gerarSinalSaida(
+                dadosFormulario.getTipoCanal(),
                 dadosFormulario.getTipoSinal(),
                 dadosFormulario.getFrequencia(),
-                dadosFormulario.getFrequenciaCorte0()
+                dadosFormulario.getFrequenciaCorte0(),
+                dadosFormulario.getFrequenciaCorte1(),
+                dadosFormulario.getFrequenciaCorte2()
         );
 
         // Converte as listas de Double para arrays de double

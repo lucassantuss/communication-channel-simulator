@@ -102,8 +102,8 @@ public class GeradorSinais {
     }
 
     public static List<List<Double>> gerarSinalSaida(
-            String tipoSinal, double f0,
-            Integer frequenciaCorte0) {
+            String tipoCanal, String tipoSinal, double f0, 
+            double frequenciaCorte0, double frequenciaCorte1, double frequenciaCorte2) {
 
         int N = 50;
         double[] vetor_An_sinal_de_saida = new double[N];
@@ -111,13 +111,21 @@ public class GeradorSinais {
 
         switch (tipoSinal) {
             case "quadrada" ->
-                SinalSaida.ondaQuadrada(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaQuadrada(N, f0, tipoCanal,
+                        frequenciaCorte0, frequenciaCorte1, frequenciaCorte2,
+                        vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "dente_serra" ->
-                SinalSaida.ondaDenteSerra(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaDenteSerra(N, f0, tipoCanal,
+                        frequenciaCorte0, frequenciaCorte1, frequenciaCorte2,
+                        vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "triangular" ->
-                SinalSaida.ondaTriangular(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaTriangular(N, f0, tipoCanal,
+                        frequenciaCorte0, frequenciaCorte1, frequenciaCorte2,
+                        vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "senoidal_retificada" ->
-                SinalSaida.ondaSenoidalRetificada(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaSenoidalRetificada(N, f0, tipoCanal,
+                        frequenciaCorte0, frequenciaCorte1, frequenciaCorte2,
+                        vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             default -> {
             }
         }

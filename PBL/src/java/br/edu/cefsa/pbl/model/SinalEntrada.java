@@ -3,6 +3,9 @@ package br.edu.cefsa.pbl.model;
 public class SinalEntrada {
 
     public static void ondaQuadrada(int N, double[] vetor_An, double[] vetor_phi_n) {
+        // Para uma onda quadrada, os componentes ímpares (n ímpar)
+        // têm amplitude 4 / (π * n) e uma fase de -π/2
+        // Enquanto os componentes pares têm amplitude e fase zero.
         for (int n = 1; n <= N; n++) {
             double An, phi_n;
 
@@ -20,6 +23,8 @@ public class SinalEntrada {
     }
 
     public static void ondaDenteSerra(int N, double[] vetor_An, double[] vetor_phi_n) {
+        // Para uma onda dente de serra, todos os componentes têm 
+        // amplitude 1 / (π * n) e uma fase de π/2.
         for (int n = 1; n <= N; n++) {
             double An = 1 / (Math.PI * n);
             double phi_n = Math.PI / 2;
@@ -30,6 +35,9 @@ public class SinalEntrada {
     }
 
     public static void ondaTriangular(int N, double[] vetor_An, double[] vetor_phi_n) {
+        // Para uma onda triangular, os componentes ímpares (n ímpar)
+        // têm amplitude 8 / (π² * n²) e uma fase de -π/2
+        // Enquanto os componentes pares têm amplitude e fase zero.
         for (int n = 1; n <= N; n++) {
             double An, phi_n;
 
@@ -47,6 +55,9 @@ public class SinalEntrada {
     }
 
     public static void ondaSenoidalRetificada(int N, double[] vetor_An, double[] vetor_phi_n) {
+        // Para uma onda senoidal retificada, apenas o componente de frequência
+        // fundamental (n=1) tem amplitude 2 / π e uma fase de -π/2
+        // Enquanto todos os outros componentes têm amplitude e fase zero.
         for (int n = 1; n <= N; n++) {
             double An, phi_n;
 

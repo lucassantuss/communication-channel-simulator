@@ -7,6 +7,7 @@ public class SinalEmitido {
     }
 
     public static double ondaTriangular(double t, double periodo) {
+        // Usado para que t_mod esteja sempre entre 0 e 'periodo'
         double t_mod = ((t % periodo) + periodo) % periodo;
 
         if (t_mod < periodo / 2) {
