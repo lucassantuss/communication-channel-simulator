@@ -111,13 +111,13 @@ public class GeradorSinais {
 
         switch (tipoSinal) {
             case "quadrada" ->
-                SinalSaida.ondaQuadrada(N, frequenciaCorte0, f0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaQuadrada(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "dente_serra" ->
-                SinalSaida.ondaDenteSerra(N, frequenciaCorte0, f0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaDenteSerra(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "triangular" ->
-                SinalSaida.ondaTriangular(N, frequenciaCorte0, f0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaTriangular(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             case "senoidal_retificada" ->
-                SinalSaida.ondaSenoidalRetificada(N, frequenciaCorte0, f0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
+                SinalSaida.ondaSenoidalRetificada(N, f0, frequenciaCorte0, vetor_An_sinal_de_saida, vetor_phi_n_sinal_de_saida);
             default -> {
             }
         }
