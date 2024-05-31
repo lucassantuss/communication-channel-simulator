@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Simulador de Canal de Comunicação</title>
+        <link rel="icon" type="image/png" href="assets/images/logo.png">
+        <link rel="stylesheet" href="assets/css/paginaInicial.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -11,12 +13,15 @@
     </head>
     <body>
         <header class="bg-dark text-light py-4">
-            <div class="container">
-                <h1 class="text-center">Simulador de Canal de Comunicação</h1>
+            <div class="container d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center">
+                    <img src="assets/images/logo.png" alt="Logo" class="logo">
+                    <h1 class="text-center m-0">Simulador de Canal de Comunicação</h1>
+                </div>
             </div>
         </header>
         <main class="container mt-4">
-            <form id="sinalForm" action="processar4.jsp">
+            <form id="sinalForm" action="Simulacao" method="post">
                 <div class="form-group required">
                     <label for="tipo_sinal">Escolha o tipo de sinal:</label>
                     <select class="form-control" name="tipo_sinal" id="tipo_sinal" required>
@@ -54,14 +59,14 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Avançar</button>
             </form>
-            <br><br><br>
+            <br><br>
         </main>
         <footer class="bg-dark text-light py-4">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 text-md-left text-center mb-3 mb-md-0">
                         <h5>Sobre Nós</h5>
-                        <p>Alunos do EC7, responsáveis pela criação e implementação desse Simulador de Canal de Comunicação</p>
+                        <p>Somos alunos do curso de Engenharia de Computação (EC7), da Faculdade Engenheiro Salvador Arena (FESA), e ficamos responsáveis pela criação e implementação desse Simulador de Canal de Comunicação</p>
                     </div>
                     <div class="col-md-6 text-md-right text-center">
                         <h5>Desenvolvedores</h5>
@@ -75,22 +80,6 @@
                 </div>
             </div>
         </footer>
-
-     <script>
-        $(document).ready(function () {
-            $('#tipo_canal').on('change', function () {
-                var selectedOption = this.value;
-
-                $('#passa_baixas_content').hide();
-                $('#passa_faixas_content').hide();
-
-                if (selectedOption === 'passa_baixas') {
-                    $('#passa_baixas_content').show();
-                } else if (selectedOption === 'passa_faixas') {
-                    $('#passa_faixas_content').show();
-                }
-            });
-        });
-    </script>
+        <script src="assets/js/paginaInicial.js"></script>
     </body>
 </html>
